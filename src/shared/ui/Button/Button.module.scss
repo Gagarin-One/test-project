@@ -1,0 +1,39 @@
+@import '@/app/styles/variables';
+
+.button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border: none;
+}
+
+.primary {
+  background-color: $color-primary;
+  color: white;
+
+  &:hover {
+    background-color: $color-primary-hover;
+  }
+}
+
+.accent {
+  background-color: $color-accent;
+  color: white;
+
+  &:hover {
+    background-color: darken($color-accent, 5%);
+  }
+}
+
+.outline {
+  background-color: transparent;
+  color: $color-primary;
+  border: 1px solid $color-primary;
+
+  &:hover {
+    background-color: rgba($color-primary, 0.05);
+  }
+}

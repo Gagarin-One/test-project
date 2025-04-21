@@ -14,6 +14,17 @@ export const fetchTasksByBoardId = createAsyncThunk(
     return response.data
   }
 )
+// Async thunk: создать задачу
+export const createNewTask = (data: Omit<Task, 'id'>) => async (dispatch: AppDispatch) => {
+  await createTask(data)
+  dispatch(fetchTasks()) // или fetchTasksByBoardId, если есть boardId
+}
+
+// Async thunk: обновить задачу
+export const updateExistingTask = (id: string, data: Partial<Task>) => async (dispatch: AppDispatch) => {
+  await updateTask(id, data)
+  dispatch(fetchTasks())
+}
 
 
 interface TaskState {
