@@ -1,20 +1,26 @@
+import { useDroppable } from '@dnd-kit/core'
 
-import { Task } from "../../entities/task/types/task.types"
-import { BoardTaskCard } from "../../features/BoardTaskCard/BoardTaskCard"
-
+import styles from './BoardColumn.module.scss'
+import { Task } from '../../entities/task/types/task.types'
+import { BoardTaskCard } from '../../features/BoardTaskCard/BoardTaskCard'
 
 interface Props {
-  status: string
+  id: string
+  title: string
   tasks: Task[]
 }
 
-export const BoardColumn = ({ status, tasks }: Props) => (
-  <div >
-    <h2>{status.toUpperCase()}</h2>
-    <div >
-      {tasks.map((task) => (
-        <BoardTaskCard key={task.id} task={task} />
-      ))}
+export const BoardColumn = ({ id, title, tasks }: Props) => {
+  const { setNodeRef } = useDroppable({ id })
+
+  return (
+    <div ref={setNodeRef} className={styles.column}>
+      <h2 className={styles.title}>{title}</h2>
+      <div className={styles.tasks}>
+        {tasks.map((task) => (
+          <BoardTaskCard key={task.id} task={task} />
+        ))}
+      </div>
     </div>
-  </div>
-)
+  )
+}

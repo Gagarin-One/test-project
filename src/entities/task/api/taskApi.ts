@@ -3,7 +3,7 @@ import { Task } from '../types/task.types';
 
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1/boards',
+  baseURL: 'http://localhost:8080/api/v1',
 })
 
 // Получить все задачи
@@ -34,5 +34,7 @@ export const updateTask = (taskId: number, data: {
 }) => api.put(`/tasks/update/${taskId}`, data)
 
 // Обновить только статус задачи
-export const updateTaskStatus = (taskId: number, status: 'To Do' | 'In Progress' | 'Done') =>
+
+
+export const updateTaskStatus = (taskId: number, status: string) =>
   api.put(`/tasks/updateStatus/${taskId}`, { status })

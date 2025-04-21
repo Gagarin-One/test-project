@@ -1,0 +1,26 @@
+@import '../../app/styles/variables';
+
+.column {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: $border-radius;
+  padding: 1rem;
+  min-width: 260px;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

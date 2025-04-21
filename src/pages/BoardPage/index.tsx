@@ -1,27 +1,52 @@
-import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+
+import { DndContext } from '@dnd-kit/core'
+
+import styles from './BoardPage.module.scss'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
-import { fetchTasksByBoardId } from '../../entities/task/model/taskSlice'
-import { BoardColumns } from '../../widgets/BoardColumns/BoardColumns'
+import { changeTaskStatus, fetchTasksByBoardId } from '../../entities/task/model/taskSlice'
+import { BoardColumn } from '../../widgets/BoardColumns/BoardColumn'
 
-
-
+const statusList = ['Backlog', 'InProgress', 'Done'] as const
 
 export const BoardPage = () => {
-  const { id: boardId } = useParams()
+  const { id } = useParams<{ id: string }>()
   const dispatch = useAppDispatch()
-
   const tasks = useAppSelector((state) => state.tasks.items)
-  const loading = useAppSelector((state) => state.tasks.loading)
 
   useEffect(() => {
-    if (boardId) dispatch(fetchTasksByBoardId(boardId))
-  }, [dispatch, boardId])
+    if (id) dispatch(fetchTasksByBoardId(Number(id)))
+  }, [dispatch, id])
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (over && active.data.current?.status !== over.id) {
+      dispatch(
+        changeTaskStatus({
+          taskId: Number(active.id),
+          status: over.id,
+          boardId: Number(id), 
+        })
+      );
+    }
+  };
 
   return (
-    <div>
-      <h1>Доска #{boardId}</h1>
-      {loading ? <p>Загрузка...</p> : <BoardColumns tasks={tasks} />}
+    <div className={styles.page}>
+      <h1 className={styles.title}>Доска #{id}</h1>
+      <DndContext onDragEnd={handleDragEnd}>
+        <div className={styles.columns}>
+          {statusList.map((status) => (
+            <BoardColumn
+              key={status}
+              id={status}
+              title={status}
+              tasks={tasks.filter((task) => task.status === status)}
+            />
+          ))}
+        </div>
+      </DndContext>
     </div>
   )
 }
