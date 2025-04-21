@@ -1,3 +1,4 @@
+// Imports
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Task } from '../types/task.types';
 import {
@@ -9,11 +10,13 @@ import {
   updateTaskStatus,
 } from '../api/taskApi';
 
+// Thunk to fetch all tasks
 export const fetchAllTasks = createAsyncThunk('tasks/fetchAll', async () => {
   const res = await getTasks();
   return res.data.data;
 });
 
+// Thunk to fetch tasks for a specific board
 export const fetchTasksByBoardId = createAsyncThunk(
   'tasks/fetchByBoard',
   async (boardId: number) => {
@@ -22,11 +25,13 @@ export const fetchTasksByBoardId = createAsyncThunk(
   },
 );
 
+// Thunk to fetch a single task by ID
 export const fetchTaskById = createAsyncThunk('tasks/fetchById', async (taskId: number) => {
   const res = await getTaskById(taskId);
   return res.data.data;
 });
 
+// Thunk to create a new task and refresh task lists
 export const createNewTask = createAsyncThunk(
   'tasks/create',
   async (
@@ -39,10 +44,11 @@ export const createNewTask = createAsyncThunk(
   }
 );
 
+// Thunk to update a task and refresh task lists
 export const updateExistingTask = createAsyncThunk(
   'tasks/update',
   async (
-    { taskId, data,boardId }: { taskId: number; data: Parameters<typeof updateTask>[1];boardId: number  },
+    { taskId, data, boardId }: { taskId: number; data: Parameters<typeof updateTask>[1]; boardId: number },
     { dispatch },
   ) => {
     await updateTask(taskId, data);
@@ -51,14 +57,11 @@ export const updateExistingTask = createAsyncThunk(
   },
 );
 
+// Thunk to change task status and refresh board tasks
 export const changeTaskStatus = createAsyncThunk(
   'tasks/changeStatus',
   async (
-    {
-      taskId,
-      status,
-      boardId,
-    }: { taskId: number; status: 'Backlog' | 'InProgress' | 'Done'; boardId: number },
+    { taskId, status, boardId }: { taskId: number; status: 'Backlog' | 'InProgress' | 'Done'; boardId: number },
     { dispatch }
   ) => {
     await updateTaskStatus(taskId, status);
@@ -66,13 +69,15 @@ export const changeTaskStatus = createAsyncThunk(
   }
 );
 
+// Task slice state type
 interface TaskState {
-  items: Task[];
-  boardItems: Task[]; 
+  items: Task[];        // All tasks
+  boardItems: Task[];   // Tasks by board
   loading: boolean;
   error: string | null;
 }
 
+// Initial state
 const initialState: TaskState = {
   items: [],
   boardItems: [],
@@ -80,14 +85,14 @@ const initialState: TaskState = {
   error: null,
 };
 
+// Task slice with async reducers
 const taskSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {
-    //
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+      // All tasks
       .addCase(fetchAllTasks.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -101,6 +106,7 @@ const taskSlice = createSlice({
         state.error = action.error.message || 'Failed to load tasks';
       })
 
+      // Tasks by board
       .addCase(fetchTasksByBoardId.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -116,4 +122,5 @@ const taskSlice = createSlice({
   },
 });
 
+// Export reducer
 export const taskReducer = taskSlice.reducer;

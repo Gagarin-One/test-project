@@ -23,7 +23,6 @@ export const BoardTaskCard = ({ task, onClick }: Props) => {
       {/* Вся остальная область — кликабельна */}
       <div className={styles.content}>
         <div className={styles.title}>{task.title}</div>
-        {/* Можно добавить описание, метки и т.д. */}
       </div>
     </div>
   );

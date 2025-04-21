@@ -1,18 +1,19 @@
-import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from '../../shared/hooks'
-import { fetchBoards } from '../../entities/board/model/boardSlice'
-import { BoardCard } from '../../entities/board/ui/BoardCard'
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../shared/hooks';
+import { fetchBoards } from '../../entities/board/model/boardSlice';
+import { BoardCard } from '../../entities/board/ui/BoardCard';
 
-import styles from './BoardsPage.module.scss'
+import styles from './BoardsPage.module.scss';
 
 export const BoardsPage = () => {
-  const dispatch = useAppDispatch()
-  const boards = useAppSelector((state) => state.boards.items)
-  const loading = useAppSelector((state) => state.boards.loading)
+  const dispatch = useAppDispatch();
+  const boards = useAppSelector((state) => state.boards.items);
+  const loading = useAppSelector((state) => state.boards.loading);
 
+  // Fetch boards when component mounts
   useEffect(() => {
-    dispatch(fetchBoards())
-  }, [dispatch])
+    dispatch(fetchBoards());
+  }, [dispatch]);
 
   return (
     <div className={styles.page}>
@@ -29,5 +30,5 @@ export const BoardsPage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

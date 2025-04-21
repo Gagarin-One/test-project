@@ -1,13 +1,10 @@
-import { Task } from "../../entities/task/types/task.types"
-
-
 export interface TaskFormValues {
-  title: string
-  description: string
-  priority: 'Low' | 'Medium' | 'High'
-  status: 'Backlog' | 'InProgress' | 'Done'
-  assigneeId: number
-  boardId: number
+  title: string;
+  description: string;
+  priority: 'Low' | 'Medium' | 'High';
+  status: 'Backlog' | 'InProgress' | 'Done';
+  assigneeId: number;
+  boardId: number;
 }
 export const defaultFormValues: TaskFormValues = {
   title: '',
@@ -16,4 +13,4 @@ export const defaultFormValues: TaskFormValues = {
   status: 'Backlog',
   assigneeId: 0,
   boardId: 0,
-}
+};

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../shared/hooks';
 import { fetchUsers } from '../../entities/user/model/userSlice';
 import { InputField } from '../../shared/ui/InputField';
 import { SelectField } from '../../shared/ui/SelectField';
-import { Button } from '../../shared/ui/Button/Button';
+import { Button } from '../../shared/ui/Button';
 import { fetchBoards } from '../../entities/board/model/boardSlice';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ interface Props {
   initialValues?: Partial<TaskFormValues>;
   readonlyBoardId?: boolean;
   isEditMode?: boolean;
-  onClose:() => void;
+  onClose: () => void;
 }
 
 const priorities = [
@@ -30,11 +30,18 @@ const statuses = [
   { label: 'Done', value: 'Done' },
 ];
 
-export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode, onClose }: Props) => {
+export const TaskForm = ({
+  onSubmit,
+  initialValues,
+  readonlyBoardId,
+  isEditMode,
+  onClose,
+}: Props) => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state.users.items);
   const boards = useAppSelector((state) => state.boards.items);
 
+  // Initial form data with optional initial values
   const [formData, setFormData] = useState<TaskFormValues>({
     title: initialValues?.title || '',
     description: initialValues?.description || '',
@@ -44,11 +51,13 @@ export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode,
     boardId: initialValues?.boardId || 0,
   });
 
+  // Fetch users and boards on component mount
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchBoards());
   }, [dispatch]);
 
+  // Set assignee if not provided and users are available
   useEffect(() => {
     if (!initialValues?.assigneeId && users.length > 0) {
       setFormData((prev) => ({
@@ -58,6 +67,7 @@ export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode,
     }
   }, [users]);
 
+  // Set board if not provided and boards are available
   useEffect(() => {
     if (!initialValues?.boardId && boards.length > 0) {
       setFormData((prev) => ({
@@ -67,6 +77,7 @@ export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode,
     }
   }, [boards]);
 
+  // Handle form field changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
@@ -78,6 +89,7 @@ export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode,
     }));
   };
 
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -139,16 +151,16 @@ export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode,
         disabled={readonlyBoardId}
       />
       <div className={styles.actions}>
-          {initialValues?.boardId && (
-            <Link
-              className={styles.linkToBoard}
-              to={`/board/${initialValues.boardId}`}
-              onClick={onClose}>
-              Перейти на доску
-            </Link>
-          )}
-          <Button type="submit">{isEditMode ? 'Обновить' : 'Создать'}</Button>
-        </div>
+        {initialValues?.boardId && (
+          <Link
+            className={styles.linkToBoard}
+            to={`/board/${initialValues.boardId}`}
+            onClick={onClose}>
+            Перейти на доску
+          </Link>
+        )}
+        <Button type="submit">{isEditMode ? 'Обновить' : 'Создать'}</Button>
+      </div>
     </form>
   );
 };

@@ -12,7 +12,7 @@ const api = axios.create({
 })
 
 //GET request to '/boards'
-export const getBoards = () => api.get<Board[]>('/boards')
+export const getBoards = () => api.get<{data:Board[]}>('/boards')
 
 //GET request to '/boards/:id
 export const getBoardTasks = (boardId: number) => api.get(`/boards/${boardId}`)

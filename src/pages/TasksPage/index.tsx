@@ -7,43 +7,49 @@ import { fetchAllTasks } from '../../entities/task/model/taskSlice';
 import { fetchUsers } from '../../entities/user/model/userSlice';
 import { fetchBoards } from '../../entities/board/model/boardSlice';
 
-import { TaskRow } from '../../widgets/TaskRow/TaskRow';
+import { TaskRow } from '../../widgets/TaskRow';
 import { TaskFormModal } from '../../features/TaskForm/TaskFormModal';
-import { Button } from '../../shared/ui/Button/Button';
+import { Button } from '../../shared/ui/Button';
 
+// Type for outlet context to manage task creation
 type ContextType = {
   onCreateTask?: () => void;
 };
 
 export const TasksPage = () => {
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector((state) => state.tasks.items);
-  const loading = useAppSelector((state) => state.tasks.loading);
-  const boards = useAppSelector((state) => state.boards.items);
-  const { onCreateTask } = useOutletContext<ContextType>();
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [formOpen, setFormOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('');
-  const [board, setBoard] = useState('');
+  const tasks = useAppSelector((state) => state.tasks.items); // Get tasks from the Redux store
+  const loading = useAppSelector((state) => state.tasks.loading); // Get loading state
+  const boards = useAppSelector((state) => state.boards.items); // Get boards from the Redux store
+  const { onCreateTask } = useOutletContext<ContextType>(); // Get task creation function from context
 
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null); // Selected task for editing
+  const [formOpen, setFormOpen] = useState(false); // Track if the task form modal is open
+  const [search, setSearch] = useState(''); // Search query for task titles and assignees
+  const [status, setStatus] = useState(''); // Filter by task status
+  const [board, setBoard] = useState(''); // Filter by board ID
+
+  // Fetch tasks, users, and boards when the component mounts
   useEffect(() => {
     dispatch(fetchAllTasks());
     dispatch(fetchUsers());
     dispatch(fetchBoards());
   }, [dispatch]);
 
+  // Handle task row click to open the task form modal
   const handleClick = (task: Task) => {
     setSelectedTask(task);
     setFormOpen(true);
   };
 
+  // Close modal and refresh the task list
   const closeModal = () => {
     setFormOpen(false);
     setSelectedTask(null);
     dispatch(fetchAllTasks());
   };
 
+  // Filter tasks based on search query, status, and selected board
   const filtered = tasks.filter((task) => {
     const query = search.toLowerCase();
     const inTitle = task.title.toLowerCase().includes(query);

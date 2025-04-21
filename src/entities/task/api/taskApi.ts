@@ -1,41 +1,44 @@
+// Import axios and Task type
 import axios from 'axios';
 import { Task } from '../types/task.types';
 
-
+// Create axios instance with base API URL
 const api = axios.create({
   baseURL: 'http://localhost:8080/api/v1',
-})
+});
 
-// Получить все задачи
-export const getTasks = () => api.get<Task[]>('/tasks')
+// Get all tasks
+export const getTasks = () => api.get<{ data: Task[] }>('/tasks');
 
-// Получить задачи по boardId
-export const getTasksByBoardId = (boardId: number) => api.get<Task[]>(`/boards/${boardId}`)
+// Get tasks by board ID
+export const getTasksByBoardId = (boardId: number) =>
+  api.get<{ data: Task[] }>(`/boards/${boardId}`);
 
-// Получить задачу по ID
-export const getTaskById = (taskId: number) => api.get<Task>(`/tasks/${taskId}`)
+// Get a single task by ID
+export const getTaskById = (taskId: number) =>
+  api.get<{ data: Task }>(`/tasks/${taskId}`);
 
-// Создать задачу
+// Create a new task
 export const createTask = (data: {
-  assigneeId: number
-  boardId: number
-  description: string
-  priority: 'Low' | 'Medium' | 'High'
-  title: string
-}) => api.post('/tasks/create', data)
+  assigneeId: number;
+  boardId: number;
+  description: string;
+  priority: 'Low' | 'Medium' | 'High';
+  title: string;
+}) => api.post('/tasks/create', data);
 
+// Update task details
+export const updateTask = (
+  taskId: number,
+  data: {
+    assigneeId: number;
+    title: string;
+    description: string;
+    priority: 'Low' | 'Medium' | 'High';
+    status: 'Backlog' | 'InProgress' | 'Done';
+  },
+) => api.put(`/tasks/update/${taskId}`, data);
 
-// Обновить задачу по ID
-export const updateTask = (taskId: number, data: {
-  assigneeId: number
-  title: string
-  description: string
-  priority: 'Low' | 'Medium' | 'High'
-  status: 'Backlog' | 'InProgress' | 'Done'
-}) => api.put(`/tasks/update/${taskId}`, data)
-
-// Обновить только статус задачи
-
-
+// Update task status only
 export const updateTaskStatus = (taskId: number, status: string) =>
-  api.put(`/tasks/updateStatus/${taskId}`, { status })
+  api.put(`/tasks/updateStatus/${taskId}`, { status });
