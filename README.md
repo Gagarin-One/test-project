@@ -45,20 +45,16 @@ src/
 Установка и запуск
 1. Установи зависимости
 npm install
-# или
 yarn install
 
 2. Запусти проект в режиме разработки
 npm run dev
-# или
 yarn dev
 
 3. Собрать проект
 npm run build
-# или
 yarn build
 
 4. Запуск сборки в предпросмотре
 npm run preview
-# или
 yarn preview
