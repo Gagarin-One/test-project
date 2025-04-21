@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 import { fetchBoards } from '../../entities/board/model/boardSlice'
 import { BoardCard } from '../../entities/board/ui/BoardCard'
+import styles from './BoardsPage.module.scss'
 
 export const BoardsPage = () => {
   const dispatch = useAppDispatch()
@@ -13,12 +14,14 @@ export const BoardsPage = () => {
   }, [dispatch])
 
   return (
-    <div>
-      <h1>Список досок</h1>
+    <div className={styles.page}>
+      <h1 className={styles.title}>Список досок</h1>
       {loading ? (
-        <p>Загрузка...</p>
+        <p className={styles.loader}>Загрузка...</p>
+      ) : boards.length === 0 ? (
+        <p className={styles.empty}>Нет досок</p>
       ) : (
-        <div >
+        <div className={styles.grid}>
           {boards.map((board) => (
             <BoardCard key={board.id} board={board} />
           ))}

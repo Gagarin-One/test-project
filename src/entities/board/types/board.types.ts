@@ -1,5 +1,6 @@
 export interface Board {
-  id: string
-  title: string
-  description?: string
+  id: number
+  name: string           
+  description: string
+  taskCount: number
 }

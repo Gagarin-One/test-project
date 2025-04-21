@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Board } from '../types/board.types'
 import { getBoards } from '../api/boardApi'
 
-export const fetchBoards = createAsyncThunk('boards/fetchAll', async () => {
-  const response = await getBoards()
-  return response.data
+export const fetchBoards = createAsyncThunk('boards', async () => {
+  const res = await getBoards()
+  return res.data.data
 })
 
 interface BoardState {
@@ -29,7 +29,7 @@ const boardSlice = createSlice({
         state.loading = true
         state.error = null
       })
-      .addCase(fetchBoards.fulfilled, (state, action: PayloadAction<Board[]>) => {
+      .addCase(fetchBoards.fulfilled, (state, action) => {
         state.items = action.payload
         state.loading = false
       })

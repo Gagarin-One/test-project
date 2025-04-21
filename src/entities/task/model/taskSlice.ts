@@ -1,30 +1,58 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { Task } from '../types/task.types'
-import { getTasks } from '../api/taskApi'
+import {
+  getTasks,
+  getTasksByBoardId,
+  getTaskById,
+  createTask,
+  updateTask,
+  updateTaskStatus,
+} from '../api/taskApi'
 
-export const fetchTasks = createAsyncThunk('tasks/fetchAll', async () => {
-  const response = await getTasks()
-  return response.data
+export const fetchAllTasks = createAsyncThunk('tasks/fetchAll', async () => {
+  const res = await getTasks()
+  return res.data
 })
 
 export const fetchTasksByBoardId = createAsyncThunk(
-  'tasks/fetchByBoardId',
-  async (boardId: string) => {
-//    const response = await axios.get<Task[]>(`/tasks?boardId=${boardId}`)
-    return response.data
+  'tasks/fetchByBoard',
+  async (boardId: number) => {
+    const res = await getTasksByBoardId(boardId)
+    return res.data
   }
 )
-// Async thunk: создать задачу
-export const createNewTask = (data: Omit<Task, 'id'>) => async (dispatch: AppDispatch) => {
-  await createTask(data)
-  dispatch(fetchTasks()) // или fetchTasksByBoardId, если есть boardId
-}
 
-// Async thunk: обновить задачу
-export const updateExistingTask = (id: string, data: Partial<Task>) => async (dispatch: AppDispatch) => {
-  await updateTask(id, data)
-  dispatch(fetchTasks())
-}
+export const fetchTaskById = createAsyncThunk(
+  'tasks/fetchById',
+  async (taskId: number) => {
+    const res = await getTaskById(taskId)
+    return res.data
+  }
+)
+
+export const createNewTask = createAsyncThunk(
+  'tasks/create',
+  async (data: Parameters<typeof createTask>[0], { dispatch }) => {
+    await createTask(data)
+    dispatch(fetchAllTasks())
+  }
+)
+
+export const updateExistingTask = createAsyncThunk(
+  'tasks/update',
+  async ({ taskId, data }: { taskId: number; data: Parameters<typeof updateTask>[1] }, { dispatch }) => {
+    await updateTask(taskId, data)
+    dispatch(fetchAllTasks())
+  }
+)
+
+export const changeTaskStatus = createAsyncThunk(
+  'tasks/changeStatus',
+  async ({ taskId, status }: { taskId: number; status: 'To Do' | 'In Progress' | 'Done' }, { dispatch }) => {
+    await updateTaskStatus(taskId, status)
+    dispatch(fetchAllTasks())
+  }
+)
 
 
 interface TaskState {
@@ -47,15 +75,15 @@ const taskSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTasks.pending, (state) => {
+      .addCase(fetchAllTasks.pending, (state) => {
         state.loading = true
         state.error = null
       })
-      .addCase(fetchTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
+      .addCase(fetchAllTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
         state.items = action.payload
         state.loading = false
       })
-      .addCase(fetchTasks.rejected, (state, action) => {
+      .addCase(fetchAllTasks.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Failed to load tasks'
       })

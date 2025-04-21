@@ -1,9 +1,20 @@
+export interface Assignee {
+  id: number
+  fullName: string
+  email: string
+  avatarUrl: string
+}
+
+export type Priority = 'Low' | 'Medium' | 'High'
+export type Status = 'To Do' | 'In Progress' | 'Done'
+
 export interface Task {
-  id: string
+  id: number
   title: string
   description: string
-  priority: 'low' | 'medium' | 'high'
-  status: 'todo' | 'in_progress' | 'done'
-  executor: string
-  boardId: string
+  priority: Priority
+  status: Status
+  assignee: Assignee
+  boardId: number
+  boardName: string
 }

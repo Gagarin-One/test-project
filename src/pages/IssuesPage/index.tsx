@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
-import { fetchTasks } from '../../entities/task/model/taskSlice'
+import { fetchAllTasks } from '../../entities/task/model/taskSlice'
+
 
 
 
@@ -10,7 +11,7 @@ export const IssuesPage = () => {
   const loading = useAppSelector((state) => state.tasks.loading)
 
   useEffect(() => {
-    dispatch(fetchTasks())
+    dispatch(fetchAllTasks())
   }, [dispatch])
 
   return (
