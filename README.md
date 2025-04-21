@@ -1,54 +1,65 @@
-# React + TypeScript + Vite
+# Task Manager — SPA на React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Многофункциональное приложение для управления задачами с досками, фильтрами, drag-n-drop и модальными окнами. Реализовано на современном стеке с использованием React, Redux Toolkit и DnD Kit.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Стек технологий
 
-## Expanding the ESLint configuration
+- **React + TypeScript**
+- **Redux Toolkit** — для управления состоянием
+- **React Router DOM** — маршрутизация
+- **@dnd-kit/core** — drag-and-drop между колонками
+- **SCSS-модули** — модульная стилизация компонентов
+- **Vite** — для сборки и быстрой разработки
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Структура проекта
+
 ```
+src/
+├── app/               // Инициализация приложения
+│   ├── store.ts       // Redux store
+│   └── styles/        // Глобальные переменные SCSS
+│
+├── entities/          // Бизнес-сущности (доски, задачи, пользователи)
+│   ├── board/
+│   ├── task/
+│   └── user/
+│
+├── features/          // Фичи (модальные окна, формы и т.п.)
+│   └── TaskForm/
+│
+├── pages/             // Страницы
+│   ├── BoardsPage/
+│   ├── BoardPage/
+│   └── TasksPage/
+│
+├── shared/            // Переиспользуемые компоненты и утилиты
+│   ├── hooks/
+│   ├── ui/
+│   └── types/
+│
+├── widgets/           // Компоненты UI уровня страницы (например, колонки)
+└── router/            // Маршруты
+Установка и запуск
+1. Установи зависимости
+npm install
+# или
+yarn install
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Запусти проект в режиме разработки
+npm run dev
+# или
+yarn dev
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+3. Собрать проект
+npm run build
+# или
+yarn build
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+🔍 4. Запуск сборки в предпросмотре
+npm run preview
+# или
+yarn preview
