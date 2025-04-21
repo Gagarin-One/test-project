@@ -29,20 +29,25 @@ export const fetchTaskById = createAsyncThunk('tasks/fetchById', async (taskId: 
 
 export const createNewTask = createAsyncThunk(
   'tasks/create',
-  async (data: Parameters<typeof createTask>[0], { dispatch }) => {
+  async (
+    data: Parameters<typeof createTask>[0],
+    { dispatch }
+  ) => {
     await createTask(data);
-    dispatch(fetchAllTasks());
-  },
+    await dispatch(fetchTasksByBoardId(data.boardId));
+    await dispatch(fetchAllTasks());
+  }
 );
 
 export const updateExistingTask = createAsyncThunk(
   'tasks/update',
   async (
-    { taskId, data }: { taskId: number; data: Parameters<typeof updateTask>[1] },
+    { taskId, data,boardId }: { taskId: number; data: Parameters<typeof updateTask>[1];boardId: number  },
     { dispatch },
   ) => {
     await updateTask(taskId, data);
-    dispatch(fetchAllTasks());
+    await dispatch(fetchTasksByBoardId(boardId));
+    await dispatch(fetchAllTasks());
   },
 );
 
@@ -63,12 +68,14 @@ export const changeTaskStatus = createAsyncThunk(
 
 interface TaskState {
   items: Task[];
+  boardItems: Task[]; 
   loading: boolean;
   error: string | null;
 }
 
 const initialState: TaskState = {
   items: [],
+  boardItems: [],
   loading: false,
   error: null,
 };
@@ -99,7 +106,7 @@ const taskSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchTasksByBoardId.fulfilled, (state, action: PayloadAction<Task[]>) => {
-        state.items = action.payload;
+        state.boardItems = action.payload;
         state.loading = false;
       })
       .addCase(fetchTasksByBoardId.rejected, (state, action) => {

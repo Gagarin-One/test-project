@@ -11,8 +11,8 @@ const api = axios.create({
   baseURL: 'http://localhost:8080/api/v1',
 })
 
-// Получить список досок
+//GET request to '/boards'
 export const getBoards = () => api.get<Board[]>('/boards')
 
-// Получить задачи по доске (аналогично getTasksByBoardId)
+//GET request to '/boards/:id
 export const getBoardTasks = (boardId: number) => api.get(`/boards/${boardId}`)

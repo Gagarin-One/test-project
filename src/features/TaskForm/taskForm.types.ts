@@ -5,16 +5,15 @@ export interface TaskFormValues {
   title: string
   description: string
   priority: 'Low' | 'Medium' | 'High'
-  status: 'To Do' | 'In Progress' | 'Done'
+  status: 'Backlog' | 'InProgress' | 'Done'
   assigneeId: number
   boardId: number
 }
-
 export const defaultFormValues: TaskFormValues = {
   title: '',
   description: '',
   priority: 'Medium',
-  status: 'To Do',
+  status: 'Backlog',
   assigneeId: 0,
   boardId: 0,
 }

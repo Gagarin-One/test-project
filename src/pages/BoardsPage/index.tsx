@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 import { fetchBoards } from '../../entities/board/model/boardSlice'
 import { BoardCard } from '../../entities/board/ui/BoardCard'
+
 import styles from './BoardsPage.module.scss'
 
 export const BoardsPage = () => {

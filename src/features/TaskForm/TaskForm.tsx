@@ -1,49 +1,71 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { TaskFormValues } from './taskForm.types';
 
 import styles from './TaskForm.module.scss';
 import { useAppDispatch, useAppSelector } from '../../shared/hooks';
-
+import { fetchUsers } from '../../entities/user/model/userSlice';
 import { InputField } from '../../shared/ui/InputField';
 import { SelectField } from '../../shared/ui/SelectField';
 import { Button } from '../../shared/ui/Button/Button';
-import { fetchUsers } from '../../entities/user/model/userSlice';
+import { fetchBoards } from '../../entities/board/model/boardSlice';
+import { Link } from 'react-router-dom';
 
 interface Props {
-  onSubmit: (data: TaskFormValues) => void;
-  initialValues?: TaskFormValues;
+  onSubmit: (values: TaskFormValues) => void;
+  initialValues?: Partial<TaskFormValues>;
+  readonlyBoardId?: boolean;
+  isEditMode?: boolean;
+  onClose:() => void;
 }
 
-const priorityOptions = [
+const priorities = [
   { label: 'Низкий', value: 'Low' },
   { label: 'Средний', value: 'Medium' },
   { label: 'Высокий', value: 'High' },
 ];
 
-const statusOptions = [
-  { label: 'To Do', value: 'To Do' },
-  { label: 'In Progress', value: 'In Progress' },
+const statuses = [
+  { label: 'To Do', value: 'Backlog' },
+  { label: 'In Progress', value: 'InProgress' },
   { label: 'Done', value: 'Done' },
 ];
 
-export const TaskForm = ({ onSubmit, initialValues }: Props) => {
-  const [formData, setFormData] = useState<TaskFormValues>(
-    initialValues || {
-      title: '',
-      description: '',
-      priority: 'Medium',
-      status: 'To Do',
-      assigneeId: 0,
-      boardId: 0,
-    },
-  );
-
+export const TaskForm = ({ onSubmit, initialValues, readonlyBoardId, isEditMode, onClose }: Props) => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state.users.items);
+  const boards = useAppSelector((state) => state.boards.items);
+
+  const [formData, setFormData] = useState<TaskFormValues>({
+    title: initialValues?.title || '',
+    description: initialValues?.description || '',
+    priority: initialValues?.priority || 'Medium',
+    status: initialValues?.status || 'Backlog',
+    assigneeId: initialValues?.assigneeId || 0,
+    boardId: initialValues?.boardId || 0,
+  });
 
   useEffect(() => {
     dispatch(fetchUsers());
+    dispatch(fetchBoards());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!initialValues?.assigneeId && users.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        assigneeId: users[0].id,
+      }));
+    }
+  }, [users]);
+
+  useEffect(() => {
+    if (!initialValues?.boardId && boards.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        boardId: boards[0].id,
+      }));
+    }
+  }, [boards]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -51,7 +73,8 @@ export const TaskForm = ({ onSubmit, initialValues }: Props) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'assigneeId' || name === 'boardId' ? Number(value) : value,
+      [name]:
+        name === 'assigneeId' || name === 'boardId' ? (value === '' ? 0 : Number(value)) : value,
     }));
   };
 
@@ -63,13 +86,12 @@ export const TaskForm = ({ onSubmit, initialValues }: Props) => {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <InputField
-        label="Название задачи"
         name="title"
+        label="Название задачи"
         value={formData.title}
         onChange={handleChange}
         required
       />
-
       <label className={styles.wrapper}>
         <span className={styles.label}>Описание</span>
         <textarea
@@ -77,42 +99,56 @@ export const TaskForm = ({ onSubmit, initialValues }: Props) => {
           value={formData.description}
           onChange={handleChange}
           className={styles.textarea}
+          required
         />
       </label>
 
       <SelectField
-        label="Приоритет"
         name="priority"
+        label="Приоритет"
         value={formData.priority}
-        options={priorityOptions}
+        options={priorities}
         onChange={handleChange}
       />
       <SelectField
-        label="Статус"
         name="status"
+        label="Статус"
         value={formData.status}
-        options={statusOptions}
+        options={statuses}
+        disabled={!isEditMode}
         onChange={handleChange}
       />
 
       <SelectField
-        label="Исполнитель"
         name="assigneeId"
+        label="Исполнитель"
         value={formData.assigneeId.toString()}
-        options={users.map((user) => ({ label: user.fullName, value: user.id.toString() }))}
+        options={users.map((u) => ({ label: u.fullName, value: u.id.toString() }))}
         onChange={handleChange}
       />
 
-      <InputField
-        label="ID доски"
+      <SelectField
         name="boardId"
-        type="number"
+        label="Проект"
         value={formData.boardId.toString()}
+        options={boards.map((b) => ({
+          label: b.name,
+          value: b.id.toString(),
+        }))}
         onChange={handleChange}
-        required
+        disabled={readonlyBoardId}
       />
-
-      <Button type="submit">Сохранить</Button>
+      <div className={styles.actions}>
+          {initialValues?.boardId && (
+            <Link
+              className={styles.linkToBoard}
+              to={`/board/${initialValues.boardId}`}
+              onClick={onClose}>
+              Перейти на доску
+            </Link>
+          )}
+          <Button type="submit">{isEditMode ? 'Обновить' : 'Создать'}</Button>
+        </div>
     </form>
   );
 };

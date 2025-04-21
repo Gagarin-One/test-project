@@ -3,6 +3,8 @@ import { taskReducer } from '../../entities/task/model/taskSlice'
 import { boardReducer } from '../../entities/board/model/boardSlice'
 import { userReducer } from '../../entities/user/model/userSlice'
 
+
+// Create and export the Redux store using configureStore
 export const store = configureStore({
   reducer: {
     tasks: taskReducer,

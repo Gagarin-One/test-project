@@ -22,7 +22,8 @@ export const createTask = (data: {
   description: string
   priority: 'Low' | 'Medium' | 'High'
   title: string
-}) => api.post<{ id: number }>('/tasks/create', data)
+}) => api.post('/tasks/create', data)
+
 
 // Обновить задачу по ID
 export const updateTask = (taskId: number, data: {
@@ -30,7 +31,7 @@ export const updateTask = (taskId: number, data: {
   title: string
   description: string
   priority: 'Low' | 'Medium' | 'High'
-  status: 'To Do' | 'In Progress' | 'Done'
+  status: 'Backlog' | 'InProgress' | 'Done'
 }) => api.put(`/tasks/update/${taskId}`, data)
 
 // Обновить только статус задачи

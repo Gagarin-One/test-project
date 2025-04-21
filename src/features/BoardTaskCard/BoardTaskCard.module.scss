@@ -5,7 +5,7 @@
   border: 1px solid #ddd;
   border-radius: $border-radius;
   padding: 1rem;
-  cursor: grab;
+  cursor: pointer;
   transition: box-shadow 0.2s;
 
   &:hover {
@@ -23,4 +23,10 @@
 .description {
   font-size: 0.9rem;
   color: $color-muted;
+}
+.dragHandle {
+  cursor: grab;
+  user-select: none;
+  padding-right: 8px;
+  font-size: 1.2rem;
 }

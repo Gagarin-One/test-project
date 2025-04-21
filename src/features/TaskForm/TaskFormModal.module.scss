@@ -1,12 +1,12 @@
-@import '@/app/styles/variables';
+@import '../../app/styles/variables';
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 
@@ -14,20 +14,61 @@
   background: white;
   padding: 2rem;
   border-radius: $border-radius;
-  min-width: 400px;
-  max-width: 90vw;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  
 }
 
 .closeButton {
   margin-top: 1rem;
+
   background: none;
   border: none;
   color: $color-accent;
   cursor: pointer;
-  font-size: 0.95rem;
 
   &:hover {
     text-decoration: underline;
+  }
+}
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: $color-muted;
+
+  &:hover {
+    color: $color-text;
+    text-decoration: none;
+  }
+}
+
+.linkToBoard {
+  display: block;
+  margin-top: 1rem;
+  text-align: right;
+  font-size: 0.9rem;
+  color: $color-primary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.actions{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+  & a{
+   margin-bottom: 10px;
   }
 }

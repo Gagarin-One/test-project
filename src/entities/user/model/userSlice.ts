@@ -17,7 +17,7 @@ const initialState: UserState = {
 
 export const fetchUsers = createAsyncThunk('users/fetchAll', async () => {
   const res = await getUsers()
-  return res.data
+  return res.data.data
 })
 
 const userSlice = createSlice({

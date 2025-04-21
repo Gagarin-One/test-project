@@ -1,0 +1,35 @@
+@import '../../app/styles/variables';
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: $border-radius;
+  background-color: white;
+  margin-bottom: 0.75rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9fafb;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.priority,
+.status,
+.assignee,
+.board {
+  font-size: 0.9rem;
+  color: $color-muted;
+}
